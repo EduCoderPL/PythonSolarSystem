@@ -156,13 +156,43 @@ mousePos = [0, 0]
 
 
 def change_timestep(change):
-    Planet.TIMESTEP *= change
+    Planet.TIMESTEP = max(Planet.TIMESTEP * change, 1/Planet.AU)
+
+
+def menu():
+    button1 = Button("Start", 200, 30, (WIDTH/2, HEIGHT/2 - 100 + 40), 6)
+    button2 = Button("Options", 200, 30, (WIDTH/2, HEIGHT/2 - 100 +80), 6)
+    button3 = Button("Quit", 200, 30, (WIDTH/2, HEIGHT/2 - 100 +120), 6)
+
+    run = True
+    clock = pygame.time.Clock()
+
+    while run:
+        WIN.fill((0, 0, 0))
+
+        button1.draw()
+        button2.draw()
+        button3.draw()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        if button1.clicked:
+            main()
+        if button2.clicked:
+            pass
+        if button3.clicked:
+            pygame.quit()
+
+        pygame.display.update()
 
 
 def main():
     button1 = Button("Double Speed", 200, 30, (10, 40), 6)
     button2 = Button("Half Speed", 200, 30, (10, 80), 6)
     button3 = Button("Reset Position", 200, 30, (10, 120), 6)
+    button4 = Button("Escape", 200, 30, (10, 160), 6)
 
     run = True
     clock = pygame.time.Clock()
@@ -192,16 +222,19 @@ def main():
 
     while run:
 
-        textsurface = FONT.render(f"Speed scale: {Planet.SCALE}", False, WHITE)
+        textsurface = FONT.render(f"View scale: {Planet.SCALE}", False, WHITE)
+        textsurface2 = FONT.render(f"View scale: {Planet.TIMESTEP / 1440} days - one second in simulation", False, WHITE)
 
         clock.tick(60)
         WIN.fill((0, 0, 0))
 
-        WIN.blit(textsurface, (100, 0))
+        WIN.blit(textsurface, (800, 10))
+        WIN.blit(textsurface2, (800, 40))
 
         button1.draw()
         button2.draw()
         button3.draw()
+        button4.draw()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -223,6 +256,8 @@ def main():
             change_timestep(1 / 2)
         if button3.clicked:
             Planet.offsetY = Planet.offsetX = 0
+        if button4.clicked:
+            menu()
 
         Planet.SCALE = lerp(Planet.SCALE, targetScale, 0.1)
 
@@ -235,4 +270,4 @@ def main():
     pygame.quit()
 
 
-main()
+menu()
