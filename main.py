@@ -14,6 +14,9 @@ RED = (188, 39, 50)
 DARK_GREY = (80, 78, 81)
 
 
+targetScale = 1
+
+
 def lerp(start, stop, interpolation):
     return start + (stop - start) * interpolation
 
@@ -148,6 +151,7 @@ class Planet:
         if len(self.orbit) > 100:
             self.orbit.pop(0)
 
+
 mousePos = [0, 0]
 
 
@@ -184,6 +188,8 @@ def main():
     pluto = Planet(39.53 * Planet.AU, 0, 6, DARK_GREY, 1.29 * 10 ** 22)
     pluto.yVel = -4.67 * 1000
 
+    targetScale = 250/Planet.AU
+
     while run:
 
         textsurface = FONT.render(f"Speed scale: {Planet.SCALE}", False, WHITE)
@@ -197,18 +203,16 @@ def main():
         button2.draw()
         button3.draw()
 
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             if pygame.mouse.get_pressed()[1]:
-
                 Planet.offsetX -= (mousePos[0] - pygame.mouse.get_pos()[0])
                 Planet.offsetY -= (mousePos[1] - pygame.mouse.get_pos()[1])
 
             if event.type == pygame.MOUSEWHEEL:
-                Planet.SCALE *= 1.4 ** event.y
-
+                targetScale *= 1.4 ** event.y
+                # Planet.SCALE *= 1.4 ** event.y
 
         for planet in Planet.listOfPlanets:
             planet.update_position()
@@ -221,9 +225,13 @@ def main():
         if button3.clicked:
             Planet.offsetY = Planet.offsetX = 0
 
-        pygame.display.update()
+        Planet.SCALE = lerp(Planet.SCALE, targetScale, 0.1)
+
         mousePos[0] = pygame.mouse.get_pos()[0]
         mousePos[1] = pygame.mouse.get_pos()[1]
+
+        pygame.display.update()
+
 
     pygame.quit()
 
