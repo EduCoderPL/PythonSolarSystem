@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="df20b238-3f9e-415a-ad23-60de8013b946" name="Changes" comment="First commit">
+    <list default="true" id="df20b238-3f9e-415a-ad23-60de8013b946" name="Changes" comment="Removed unnecessary files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -139,7 +139,21 @@
       <option name="project" value="LOCAL" />
       <updated>1650965687518</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Added main menu">
+      <created>1650966848084</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1650966848084</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Removed unnecessary files">
+      <created>1650966987041</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1650966987041</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -179,6 +193,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="First commit" />
+    <MESSAGE value="Added main menu" />
+    <MESSAGE value="Removed unnecessary files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed unnecessary files" />
   </component>
 </project>

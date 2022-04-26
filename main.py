@@ -13,6 +13,8 @@ BLUE = (0, 0, 255)
 RED = (188, 39, 50)
 DARK_GREY = (80, 78, 81)
 
+global firstTime
+
 
 targetScale = 1
 
@@ -22,7 +24,7 @@ def lerp(start, stop, interpolation):
 
 
 class Button:
-    def __init__(self, text, width, height, pos, elevation):
+    def __init__(self, text, width, height, pos, elevation, textSize):
         self.pressed = False
         self.clicked = False
 
@@ -35,8 +37,9 @@ class Button:
 
         self.bottomRect = pygame.Rect(pos, (width, height))
         self.bottomColor = "#354B5E"
+        self.FONT = pygame.font.SysFont("comicsans", textSize)
 
-        self.textSurf = FONT.render(f"  {text}  ", True, "#FFFFFF")
+        self.textSurf = self.FONT.render(f"  {text}  ", True, "#FFFFFF")
         self.textRect = self.textSurf.get_rect(center=self.topRect.center)
 
     def draw(self):
@@ -81,7 +84,9 @@ class Planet:
 
     listOfPlanets = []
 
-    def __init__(self, x, y, radius, color, mass):
+    def __init__(self, name, x, y, radius, color, mass):
+        self.name = name
+
         self.x = x
         self.y = y
         self.radius = radius
@@ -114,8 +119,14 @@ class Planet:
         pygame.draw.circle(win, self.color, (x, y), self.radius * Planet.SCALE / (250 / Planet.AU))
 
         if not self.sun:
+            name_text = FONT.render(f"{self.name}", True, WHITE)
             distance_text = FONT.render(f"{math.trunc(self.distanceToSun)} km", True, WHITE)
-            win.blit(distance_text, (x - distance_text.get_width() / 2, y - distance_text.get_height() / 2))
+            pygame.draw.rect(win, (255, 0, 0), pygame.Rect(x - 3, y - 55, 3, 55))
+            pygame.draw.rect(win, (255, 0, 0), pygame.Rect(x - 3, y - 22, 200, 2))
+            win.blit(name_text, (x, y - distance_text.get_height() / 2 - 50))
+            win.blit(distance_text, (x, y - distance_text.get_height() / 2 - 30))
+
+
 
     def attraction(self, other):
         other_x, other_y = other.x, other.y
@@ -160,9 +171,10 @@ def change_timestep(change):
 
 
 def menu():
-    button1 = Button("Start", 200, 30, (WIDTH/2, HEIGHT/2 - 100 + 40), 6)
-    button2 = Button("Options", 200, 30, (WIDTH/2, HEIGHT/2 - 100 +80), 6)
-    button3 = Button("Quit", 200, 30, (WIDTH/2, HEIGHT/2 - 100 +120), 6)
+    menuButtons = []
+    menuButtons.append(Button("Start", 500, 100, (WIDTH/2 - 250, HEIGHT/2 - 300 + 40), 6, 32))
+    menuButtons.append(Button("Options", 500, 100, (WIDTH/2 - 250, HEIGHT/2 - 300 + 150), 6, 32))
+    menuButtons.append(Button("Quit", 500, 100, (WIDTH/2 - 250, HEIGHT/2 - 300 + 260), 6, 32))
 
     run = True
     clock = pygame.time.Clock()
@@ -170,53 +182,56 @@ def menu():
     while run:
         WIN.fill((0, 0, 0))
 
-        button1.draw()
-        button2.draw()
-        button3.draw()
+        for button in menuButtons:
+            button.draw()
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
 
-        if button1.clicked:
+        if menuButtons[0].clicked:
             main()
-        if button2.clicked:
+        if menuButtons[1].clicked:
             pass
-        if button3.clicked:
+        if menuButtons[2].clicked:
             pygame.quit()
 
         pygame.display.update()
 
 
-def main():
-    button1 = Button("Double Speed", 200, 30, (10, 40), 6)
-    button2 = Button("Half Speed", 200, 30, (10, 80), 6)
-    button3 = Button("Reset Position", 200, 30, (10, 120), 6)
-    button4 = Button("Escape", 200, 30, (10, 160), 6)
 
+
+def main():
     run = True
     clock = pygame.time.Clock()
+    mainButtons = []
+    mainButtons.append(Button("Double Speed", 200, 30, (1020, 120), 6, 16))
+    mainButtons.append(Button("Half Speed", 200, 30, (1020, 160), 6, 16))
+    mainButtons.append(Button("Reset Position", 200, 30, (1020, 200), 6, 16))
+    mainButtons.append(Button("Escape", 200, 30, (10, 10), 6, 16))
 
-    sun = Planet(0, 0, 30, YELLOW, 1.98892 * 10 ** 30)
-    sun.sun = True
-    earth = Planet(-1 * Planet.AU, 0, 16, BLUE, 5.9742 * 10 ** 24)
-    earth.yVel = 29.783 * 1000
-    mars = Planet(-1.524 * Planet.AU, 0, 12, RED, 1.98892 * 10 ** 23)
-    mars.yVel = 24.783 * 1000
-    mercury = Planet(0.387 * Planet.AU, 0, 8, DARK_GREY, 3.30 * 10 ** 23)
-    mercury.yVel = -47.783 * 1000
-    venus = Planet(0.723 * Planet.AU, 0, 14, WHITE, 4.8685 * 10 ** 24)
-    venus.yVel = -35.02 * 1000
-    jupiter = Planet(5.203 * Planet.AU, 0, 25, RED, 1.90 * 10 ** 27)
-    jupiter.yVel = -13.1 * 1000
-    saturn = Planet(9.539 * Planet.AU, 0, 23, YELLOW, 5.69 * 10 ** 26)
-    saturn.yVel = -9.7 * 1000
-    uranus = Planet(19.18 * Planet.AU, 0, 21, BLUE, 8.68 * 10 ** 25)
-    uranus.yVel = -6.8 * 1000
-    neptune = Planet(30.06 * Planet.AU, 0, 22, WHITE, 1.02 * 10 ** 26)
-    neptune.yVel = -5.4 * 1000
-    pluto = Planet(39.53 * Planet.AU, 0, 6, DARK_GREY, 1.29 * 10 ** 22)
-    pluto.yVel = -4.67 * 1000
+    if Planet.listOfPlanets == []:
+        sun = Planet("Sun", 0, 0, 30, YELLOW, 1.98892 * 10 ** 30)
+        sun.sun = True
+        earth = Planet("Earth", -1 * Planet.AU, 0, 16, BLUE, 5.9742 * 10 ** 24)
+        earth.yVel = 29.783 * 1000
+        mars = Planet("Mars", -1.524 * Planet.AU, 0, 12, RED, 1.98892 * 10 ** 23)
+        mars.yVel = 24.783 * 1000
+        mercury = Planet("Mercury", 0.387 * Planet.AU, 0, 8, DARK_GREY, 3.30 * 10 ** 23)
+        mercury.yVel = -47.783 * 1000
+        venus = Planet("Venus", 0.723 * Planet.AU, 0, 14, WHITE, 4.8685 * 10 ** 24)
+        venus.yVel = -35.02 * 1000
+        jupiter = Planet("Jupiter", 5.203 * Planet.AU, 0, 25, RED, 1.90 * 10 ** 27)
+        jupiter.yVel = -13.1 * 1000
+        saturn = Planet("Saturn", 9.539 * Planet.AU, 0, 23, YELLOW, 5.69 * 10 ** 26)
+        saturn.yVel = -9.7 * 1000
+        uranus = Planet("Uranus", 19.18 * Planet.AU, 0, 21, BLUE, 8.68 * 10 ** 25)
+        uranus.yVel = -6.8 * 1000
+        neptune = Planet("Neptune", 30.06 * Planet.AU, 0, 22, WHITE, 1.02 * 10 ** 26)
+        neptune.yVel = -5.4 * 1000
+        pluto = Planet("Pluto", 39.53 * Planet.AU, 0, 6, DARK_GREY, 1.29 * 10 ** 22)
+        pluto.yVel = -4.67 * 1000
 
     targetScale = 250/Planet.AU
 
@@ -231,10 +246,9 @@ def main():
         WIN.blit(textsurface, (800, 10))
         WIN.blit(textsurface2, (800, 40))
 
-        button1.draw()
-        button2.draw()
-        button3.draw()
-        button4.draw()
+        for button in mainButtons:
+            button.draw()
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -250,13 +264,13 @@ def main():
             planet.update_position()
             planet.draw(WIN)
 
-        if button1.clicked:
+        if mainButtons[0].clicked:
             change_timestep(2)
-        if button2.clicked:
+        if mainButtons[1].clicked:
             change_timestep(1 / 2)
-        if button3.clicked:
+        if mainButtons[2].clicked:
             Planet.offsetY = Planet.offsetX = 0
-        if button4.clicked:
+        if mainButtons[3].clicked:
             menu()
 
         Planet.SCALE = lerp(Planet.SCALE, targetScale, 0.1)
@@ -269,5 +283,5 @@ def main():
 
     pygame.quit()
 
-
+firstTime = False
 menu()
