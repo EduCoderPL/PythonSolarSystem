@@ -212,7 +212,6 @@ def main():
 
             if event.type == pygame.MOUSEWHEEL:
                 targetScale *= 1.4 ** event.y
-                # Planet.SCALE *= 1.4 ** event.y
 
         for planet in Planet.listOfPlanets:
             planet.update_position()
