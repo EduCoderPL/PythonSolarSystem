@@ -189,6 +189,7 @@ def menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                pygame.quit()
 
         if menuButtons[0].clicked:
             main()
